@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área do Cliente - Barbearia Elite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="module" src="js/agendamentos.js"></script>
+    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/cancelamento.js"></script>
+    <script type="module" src="js/eventos.js"></script>
+    <script type="module" src="js/formulario.js"></script>
+    <script type="module" src="js/servicos.js"></script>
+    <script type="module" src="js/utils.js"></script>
+    <script type="module" src="js/firebase.js"></script>
+</head>
+<body>
+
+<header class="topo">
+    <div>
+        <h1>💈 Barbearia Elite</h1>
+        <p>Seu estilo, nossa prioridade.</p>
+    </div>
+    <button id="btn-sair" class="btn-sair">Sair ↗</button>
+</header>
+
+<main class="container">
+    <section class="boas-vindas">
+        <div>
+            <span class="subtitulo">ÁREA DO CLIENTE</span>
+            <h2 id="nome-cliente">Olá, Cliente!</h2>
+            <p>Gerencie seus horários e cuide do seu estilo.</p>
+        </div>
+        <button id="btn-novo-agendamento">+ Novo agendamento</button>
+    </section>
+
+    <nav class="menu">
+        <button class="menu-btn ativo" data-secao="inicio">Início</button>
+        <button class="menu-btn" data-secao="agendamentos">Meus agendamentos</button>
+        <button class="menu-btn" data-secao="servicos">Serviços</button>
+    </nav>
+
+    <section id="secao-inicio" class="secao">
+        <div class="resumo">
+            <article class="card resumo-card">
+                <span>Próximos horários</span>
+                <strong id="total-proximos">0</strong>
+            </article>
+
+            <article class="card resumo-card">
+                <span>Agendamentos realizados</span>
+                <strong id="total-realizados">0</strong>
+            </article>
+
+            <article class="card resumo-card">
+                <span>Serviços disponíveis</span>
+                <strong id="total-servicos">4</strong>
+            </article>
+        </div>
+
+        <div class="card">
+            <div class="titulo-secao">
+                <div>
+                    <h3>Próximo agendamento</h3>
+                    <p>Confira seu próximo horário marcado.</p>
+                </div>
+                <button class="btn-secundario" data-ir="agendamentos">
+                    Ver todos
+                </button>
+            </div>
+            <div id="proximo-agendamento"></div>
+        </div>
+
+        <div class="card destaque">
+            <h3>Cuide do seu visual</h3>
+            <p>Escolha um serviço e reserve um horário para sua próxima visita.</p>
+            <button id="btn-ver-servicos">Conhecer serviços</button>
+        </div>
+    </section>
+
+    <section id="secao-agendamentos" class="secao oculto">
+        <div class="titulo-secao">
+            <div>
+                <h2>Meus agendamentos</h2>
+                <p>Acompanhe seus horários.</p>
+            </div>
+            <button id="btn-novo-agendamento-2">+ Agendar</button>
+        </div>
+
+        <div id="lista-agendamentos" class="lista-cards"></div>
+    </section>
+
+    <section id="secao-servicos" class="secao oculto">
+        <h2>Nossos serviços</h2>
+        <p class="texto-claro">Escolha seu próximo cuidado pessoal.</p>
+        <div id="lista-servicos" class="lista-servicos"></div>
+    </section>
+
+    <section id="secao-formulario" class="secao oculto">
+        <div class="card formulario-card">
+            <div class="titulo-secao">
+                <h2 id="titulo-formulario">Novo agendamento</h2>
+                <button id="btn-fechar-formulario" class="btn-secundario">
+                    Voltar
+                </button>
+            </div>
+
+            <form id="form-agendamento">
+                <label for="servico">Serviço</label>
+                <select id="servico" required>
+                    <option value="">Selecione um serviço</option>
+                    <option value="Corte de cabelo">Corte de cabelo - R$ 40,00</option>
+                    <option value="Barba">Barba - R$ 25,00</option>
+                    <option value="Corte + barba">Corte + barba - R$ 55,00</option>
+                    <option value="Sobrancelha">Sobrancelha - R$ 15,00</option>
+                </select>
+
+                <label for="data">Data</label>
+                <input type="date" id="data" required>
+
+                <label for="horario">Horário</label>
+                <select id="horario" required>
+                    <option value="">Selecione um horário</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                </select>
+
+                <p class="aviso">
+                    Os horários são demonstrativos e não verificam a agenda real da barbearia.
+                </p>
+
+                <button type="submit" id="btn-confirmar-agendamento">
+                    Confirmar agendamento
+                </button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div id="modal-cancelamento" class="modal oculto">
+    <div class="modal-conteudo">
+        <h3>Cancelar agendamento?</h3>
+        <p>Deseja realmente cancelar este horário?</p>
+
+        <div class="acoes-modal">
+            <button id="btn-confirmar-cancelamento" class="btn-perigo">
+                Sim, cancelar
+            </button>
+            <button id="btn-voltar-cancelamento" class="btn-secundario">
+                Voltar
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-sair" class="modal oculto">
+    <div class="modal-conteudo">
+        <h3>Deseja sair?</h3>
+        <p>Você voltará para a tela inicial desta demonstração.</p>
+        <div class="acoes-modal">
+            <button id="btn-confirmar-sair">Sim, sair</button>
+            <button id="btn-cancelar-sair" class="btn-secundario">
+                Continuar aqui
+            </button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
